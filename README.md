@@ -101,3 +101,43 @@ When you have applications with both Server and Client Components, it's importan
 - Use libraries that do not run on the server, such as Toast, Zustand, or other client-only libraries.
 - Use browser APIs such as Local Storage, the Notifications API, and the Geolocation API.
 - Consume JSON data from an external API.
+
+
+## Prisma ORM (Object-Relational Mapping)
+
+Prisma is an open-source ORM for JavaScript and TypeScript. Its main tools are Prisma Client, Prisma Migrate, and Prisma Studio.
+
+### Prisma tools
+
+- **Prisma Client** is a type-safe query builder for accessing your database. It supports Node.js and works with Next.js.
+- **Prisma Migrate** lets you define your database tables and relationships in a Prisma schema, then create and manage database migrations.
+- **Prisma Studio** is a visual interface for viewing and editing data in your database locally.
+
+### Installing Prisma
+
+From your project directory, install the Prisma CLI and client, then initialize Prisma. Choose the provider that matches your database:
+
+```bash
+npm install prisma --save-dev
+npm install @prisma/client @prisma/adapter-pg pg
+npx prisma init --datasource-provider postgresql
+```
+
+For a SQL database such as PostgreSQL, set your `DATABASE_URL` in `.env`, define your models in `prisma/schema.prisma`, and create the database tables with:
+
+```bash
+npx prisma migrate dev --name init
+npx prisma generate
+npx prisma studio
+```
+
+The migration command above is for SQL databases; MongoDB uses a different workflow. The adapter packages above are for PostgreSQL, and Prisma ORM 7 requires a driver adapter to connect to your database. Installation and setup details vary by database and Prisma version, so follow the relevant guide in the [official Prisma documentation](https://www.prisma.io/docs/orm).
+
+### Supported databases
+
+- MariaDB
+- Microsoft SQL Server (2017, 2019, and 2022)
+- MongoDB
+- MySQL
+- PostgreSQL
+- SQLite
