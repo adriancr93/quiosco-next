@@ -113,25 +113,35 @@ Prisma is an open-source ORM for JavaScript and TypeScript. Its main tools are P
 - **Prisma Migrate** lets you define your database tables and relationships in a Prisma schema, then create and manage database migrations.
 - **Prisma Studio** is a visual interface for viewing and editing data in your database locally.
 
-### Installing Prisma
+This project uses Prisma 7 with PostgreSQL. Set `DATABASE_URL` in a local `.env` file; `prisma.config.ts` loads it and points the CLI to `prisma/schema.prisma`. The Prisma schema is in `prisma/schema.prisma`, and migrations are stored in `prisma/migrations/`.
 
-From your project directory, install the Prisma CLI and client, then initialize Prisma. Choose the provider that matches your database:
+### Prisma commands
 
-```bash
-npm install prisma --save-dev
-npm install @prisma/client @prisma/adapter-pg pg
-npx prisma init --datasource-provider postgresql
-```
-
-For a SQL database such as PostgreSQL, set your `DATABASE_URL` in `.env`, define your models in `prisma/schema.prisma`, and create the database tables with:
+Run these commands from the project root. They use the Prisma CLI installed in this project:
 
 ```bash
-npx prisma migrate dev --name init
 npx prisma generate
+npx prisma validate
+npx prisma format
+npx prisma migrate dev --name <migration_name>
+npx prisma migrate status
+npx prisma migrate deploy
 npx prisma studio
 ```
 
-The migration command above is for SQL databases; MongoDB uses a different workflow. The adapter packages above are for PostgreSQL, and Prisma ORM 7 requires a driver adapter to connect to your database. Installation and setup details vary by database and Prisma version, so follow the relevant guide in the [official Prisma documentation](https://www.prisma.io/docs/orm).
+Use `migrate dev` while developing to create and apply a migration, replacing `<migration_name>` with a descriptive name (for example, `add_product_description`). Use `migrate deploy` to apply committed migrations in production or CI; it does not create migrations. `migrate status` checks whether the database is up to date. `generate` regenerates the Prisma Client after schema changes, and `studio` opens the local database browser.
+
+The following commands are available for specific workflows:
+
+```bash
+npx prisma db push
+npx prisma db pull
+npx prisma migrate reset
+```
+
+`db push` synchronizes the schema directly without creating a migration, so prefer `migrate dev` for changes that should be tracked in Git. `db pull` introspects the database and updates the Prisma schema. `migrate reset` drops and recreates the development database, reapplies migrations, and deletes its data; do not run it against a database whose data you need to keep.
+
+For PostgreSQL, Prisma ORM 7 also uses the project's PostgreSQL driver adapter when the application connects to the database. For more details, see the [official Prisma documentation](https://www.prisma.io/docs/orm).
 
 ### Supported databases
 
