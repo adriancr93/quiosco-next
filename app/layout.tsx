@@ -2,14 +2,11 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 
-const font = Inter({ 
-  subsets: ["latin"],
-  weight: ["400", "700", "900"] 
-});
+const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Quiosco Next.js with App Router and Prisma",
-  description: "Quiosco Next.js with App Router and Prisma",
+  title: "Quisco Next.js con App Router y Prisma",
+  description: "Quisco Next.js con App Router y Prisma",
 };
 
 export default function RootLayout({
@@ -19,11 +16,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body
-        className={`${font.className} bg-gray-100 antialiased`}
-      >
-        {children}
-      </body>
+      <body className={`${inter.className} bg-gray-100`}>{children}</body>
     </html>
   );
 }

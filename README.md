@@ -1,3 +1,82 @@
+# Quiosco Next.js
+
+**Quiosco** is a self-service food-ordering kiosk app built with Next.js 14 (App Router), TypeScript, Prisma, and PostgreSQL. Customers browse products by category and place orders; an admin panel manages products and tracks/completes orders.
+
+## Tech stack
+
+- **Next.js 14** (App Router) + React 18 + TypeScript
+- **Prisma 5** ORM with **PostgreSQL**
+- **Tailwind CSS** for styling
+- **Zustand** for client-side cart state ([src/store.ts](src/store.ts))
+- **SWR** for client-side data fetching
+- **Zod** for schema/form validation ([src/schema](src/schema))
+- **next-cloudinary** for product image uploads (Cloudinary)
+- **react-toastify** for toast notifications
+
+## Project structure
+
+- [app/](app) — routes (App Router): `/` (categories home), `/order/[category]` (customer ordering flow), `/orders` (public order-status board + API), `/admin` (products & orders management + API)
+- [actions/](actions) — Next.js Server Actions (`create-order-action`, `complete-order-action`, `create-product-action`, `update-product-action`)
+- [components/](components) — UI split into `admin/`, `order/`, `products/`, `ui/`
+- [prisma/schema.prisma](prisma/schema.prisma) — data model: `Category`, `Product`, `Order`, `OrderProducts`
+- [prisma/seed.ts](prisma/seed.ts) — seeds categories/products from [prisma/data](prisma/data)
+- [src/](src) — `lib/` (Prisma client singleton), `schema/` (Zod schemas), `types/`, `utils/`
+
+## Getting started
+
+1. Install dependencies:
+
+   ```bash
+   npm install
+   ```
+
+2. Copy the environment template and set your PostgreSQL connection string:
+
+   ```bash
+   cp .env.example .env
+   ```
+
+   Set `DATABASE_URL` in `.env` (PostgreSQL >= 15 required).
+
+3. Apply migrations and generate the Prisma Client:
+
+   ```bash
+   npx prisma migrate dev
+   ```
+
+4. (Optional) Seed the database with sample categories and products:
+
+   ```bash
+   npx prisma db seed
+   ```
+
+5. Run the development server:
+
+   ```bash
+   npm run dev
+   ```
+
+   Open [http://localhost:3000](http://localhost:3000) for the customer view, and `/admin` for the admin panel.
+
+## npm scripts
+
+```bash
+npm run dev     # start the dev server (next dev)
+npm run build   # build for production (next build)
+npm run start   # start the production server (next start)
+npm run lint    # run ESLint (next lint)
+```
+
+## Environment variables
+
+| Variable       | Description                                          |
+| -------------- | ----------------------------------------------------- |
+| `DATABASE_URL` | PostgreSQL connection string used by Prisma.          |
+
+Product images are uploaded via a Cloudinary upload widget (`next-cloudinary`) using a hardcoded upload preset in [components/products/ImageUpload.tsx](components/products/ImageUpload.tsx), and `next.config.mjs` allows images from `res.cloudinary.com`. No Cloudinary API keys are required client-side for the current unsigned upload preset.
+
+---
+
 # Next.js
 
 The React Framework for the Web.
@@ -151,3 +230,13 @@ For PostgreSQL, Prisma ORM 7 also uses the project's PostgreSQL driver adapter w
 - MySQL
 - PostgreSQL
 - SQLite
+
+Data Fetching
+
+Data fetching in Next.js can be done in four different ways:
+
+- On the server with `fetch()`.
+- On the server with an ORM or SQL queries.
+- On the client with a Route Handler and a GET request.
+- On the client with React Query, Axios, SWR, or other options.
+
